@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Поняття мови розмічання гіпертекстового документа</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-scale: 1;
+      --bg-page: linear-gradient(135deg, #fffbeb 0%, #fef3c7 35%, #ffedd5 70%, #e0f2fe 100%);
+      --bg-card: #ffffff;
+      --bg-muted: #fffdf7;
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --border-main: #fcd34d;
+      --border-strong: #d97706;
+      --accent: #f59e0b;
+      --accent-hover: #d97706;
+      --accent-bg: #fef3c7;
+      --accent-secondary: #ea580c;
+      --ok-bg: #dcfce7;
+      --ok-text: #14532d;
+      --ok-border: #16a34a;
+      --warn-bg: #fef9c3;
+      --warn-text: #713f12;
+      --warn-border: #eab308;
+      --err-bg: #ffe4e6;
+      --err-text: #881337;
+      --err-border: #e11d48;
+    }
+
+    body.high-contrast {
+      --bg-page: #000000;
+      --bg-card: #0a0a0a;
+      --bg-muted: #141414;
+      --text-primary: #ffffff;
+      --text-secondary: #fde047;
+      --border-main: #fde047;
+      --border-strong: #fde047;
+      --accent: #fde047;
+      --accent-hover: #facc15;
+      --accent-bg: #1f1f00;
+      --accent-secondary: #fde047;
+      --ok-bg: #052e16;
+      --ok-text: #86efac;
+      --ok-border: #4ade80;
+      --warn-bg: #422006;
+      --warn-text: #fde047;
+      --warn-border: #facc15;
+      --err-bg: #450a0a;
+      --err-text: #fca5a5;
+      --err-border: #f87171;
+    }
+
+    html {
+      font-size: calc(16px * var(--font-scale));
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-page);
+      background-attachment: fixed;
+      color: var(--text-primary);
+      line-height: 1.6;
+      transition: background 0.25s ease, color 0.2s ease;
+    }
+
+    .card-box {
+      background-color: var(--bg-card);
+      color: var(--text-primary);
+      border: 2px solid var(--border-main);
+      border-radius: 1.25rem;
+      box-shadow: 0 10px 25px -12px rgba(217, 119, 6, 0.16);
+    }
+
+    body.high-contrast .card-box {
+      box-shadow: none;
+    }
+
+    .muted-box {
+      background-color: var(--bg-muted);
+      color: var(--text-primary);
+      border: 1.5px solid var(--border-main);
+      border-radius: 1rem;
+    }
+
+    .btn-main {
+      background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+      color: #ffffff;
+      border: 2px solid #c2410c;
+      border-radius: 0.85rem;
+      font-weight: 700;
+      min-height: 44px;
+      box-shadow: 0 4px 12px rgba(234, 88, 12, 0.25);
+      transition: transform 0.1s ease, filter 0.15s ease;
+    }
+
+    body.high-contrast .btn-main {
+      background: var(--accent);
+      color: #000000;
+      border-color: var(--accent);
+      box-shadow: none;
+    }
+
+    .btn-main:hover {
+      filter: brightness(1.05);
+    }
+
+    .btn-alt {
+      background-color: var(--bg-card);
+      color: var(--text-primary);
+      border: 2px solid var(--border-strong);
+      border-radius: 0.85rem;
+      font-weight: 600;
+      min-height: 44px;
+      transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+    }
+
+    .btn-alt:hover,
+    .btn-alt[aria-pressed="true"],
+    .btn-alt.is-active {
+      background-color: var(--accent-bg);
+      border-color: var(--accent-secondary);
+    }
+
+    .tab-trigger {
+      background-color: var(--bg-card);
+      color: var(--text-primary);
+      border: 2px solid var(--border-main);
+      border-radius: 1rem;
+      font-weight: 800;
+      min-height: 54px;
+      transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.1s ease;
+    }
+
+    .tab-trigger[aria-selected="true"] {
+      background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+      color: #ffffff;
+      border-color: #c2410c;
+      box-shadow: 0 8px 20px -8px rgba(234, 88, 12, 0.45);
+    }
+
+    body.high-contrast .tab-trigger[aria-selected="true"] {
+      background: var(--accent);
+      color: #000000;
+      border-color: var(--accent);
+      box-shadow: none;
+    }
+
+    code,
+    kbd {
+      display: inline-block;
+      padding: 0.12rem 0.48rem;
+      font-size: 0.9em;
+      font-weight: 700;
+      border-radius: 0.5rem;
+      border: 1.5px solid var(--border-strong);
+      background-color: var(--accent-bg);
+      color: var(--text-primary);
+    }
+
+    body.high-contrast code,
+    body.high-contrast kbd {
+      background-color: #1f1f00;
+      color: #fde047;
+    }
+
+    textarea.code-editor {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      background-color: #0f172a;
+      color: #fef3c7;
+      border: 2px solid var(--border-strong);
+      border-radius: 1rem;
+      line-height: 1.55;
+    }
+
+    body.high-contrast textarea.code-editor {
+      background-color: #000000;
+      color: #fde047;
+      border-color: #fde047;
+    }
+
+    select {
+      background-color: var(--bg-card);
+      color: var(--text-primary);
+      border: 2px solid var(--border-strong);
+      border-radius: 0.75rem;
+      padding: 0.5rem 0.75rem;
+      font-weight: 600;
+      min-height: 44px;
+    }
+
+    /* Стилі відрендереного HTML-прев'ю у живому тренажері */
+    .markup-preview h1 { font-size: 1.45rem; font-weight: 800; margin-bottom: 0.5rem; color: #c2410c; }
+    .markup-preview h2 { font-size: 1.2rem; font-weight: 700; margin-top: 0.75rem; margin-bottom: 0.35rem; color: #0f172a; }
+    .markup-preview h3 { font-size: 1.05rem; font-weight: 700; margin-top: 0.5rem; margin-bottom: 0.25rem; }
+    .markup-preview p { margin-bottom: 0.5rem; }
+    .markup-preview ul { list-style-type: disc; padding-left: 1.4rem; margin-bottom: 0.5rem; }
+    .markup-preview ol { list-style-type: decimal; padding-left: 1.4rem; margin-bottom: 0.5rem; }
+    .markup-preview li { margin-bottom: 0.2rem; }
+    .markup-preview a { color: #0284c7; text-decoration: underline; font-weight: 600; }
+    .markup-preview strong, .markup-preview b { font-weight: 800; }
+    .markup-preview em, .markup-preview i { font-style: italic; }
+    .markup-preview hr { border: 0; border-top: 2px solid #fcd34d; margin: 0.65rem 0; }
+    body.high-contrast .markup-preview h1,
+    body.high-contrast .markup-preview h2,
+    body.high-contrast .markup-preview h3,
+    body.high-contrast .markup-preview a {
+      color: #fde047;
+    }
+  </style>
+</head>
+<body class="min-h-screen pb-14">
+  <!-- Верхня панель доступності -->
+  <header class="sticky top-0 z-30 card-box rounded-none border-x-0 border-t-0 px-4 py-3 sm:px-6 backdrop-blur-md">
+    <div class="max-w-6xl mx-auto flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+      <div class="space-y-1">
+        <div class="inline-flex flex-wrap items-center gap-2 px-3.5 py-1 rounded-full text-xs sm:text-sm font-extrabold border-2"
+             style="background: linear-gradient(90deg, #fef3c7 0%, #ffedd5 100%); border-color: #f59e0b; color: #0f172a;">
+          <span>11 клас НУШ • Рівень стандарту</span>
+          <span>•</span>
+          <span>Вебтехнології</span>
+        </div>
+        <h1 class="text-lg sm:text-2xl font-extrabold tracking-tight leading-snug">
+          Поняття мови розмічання гіпертекстового документа
+        </h1>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+        <!-- Перемикач масштабу шрифту (100%, 125%, 150%) -->
+        <div class="flex items-center gap-1.5 muted-box px-2.5 py-1.5" role="group" aria-label="Масштаб шрифту">
+          <span class="text-xs sm:text-sm font-bold px-1">Шрифт:</span>
+          <button type="button" data-font-scale="1" class="font-scale-btn btn-alt is-active px-3 py-1.5 text-sm min-h-[40px]" aria-pressed="true">100%</button>
+          <button type="button" data-font-scale="1.25" class="font-scale-btn btn-alt px-3 py-1.5 text-sm min-h-[40px]" aria-pressed="false">125%</button>
+          <button type="button" data-font-scale="1.5" class="font-scale-btn btn-alt px-3 py-1.5 text-sm min-h-[40px]" aria-pressed="false">150%</button>
+        </div>
+
+        <!-- Перемикач висококонтрастної теми -->
+        <button
+          type="button"
+          id="contrast-btn"
+          class="btn-alt px-4 py-2 text-sm sm:text-base font-bold flex items-center gap-2"
+          aria-pressed="false"
+        >
+          <span aria-hidden="true">☀</span>
+          <span>Високий контраст</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Повідомлення без alert() -->
+    <div id="status-box" class="hidden max-w-6xl mx-auto mt-2.5 px-4 py-2.5 rounded-xl text-sm sm:text-base font-semibold border-2" role="status" aria-live="polite"></div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 pt-6 space-y-6">
+    <!-- Навігація по 4 вкладках у чіткій послідовності -->
+    <nav aria-label="Розділи уроку" role="tablist" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      <button
+        type="button"
+        role="tab"
+        id="tab-btn-theory"
+        aria-selected="true"
+        aria-controls="panel-theory"
+        class="tab-trigger px-4 py-3 text-base sm:text-lg"
+      >
+        1. Теорія та тренажер
+      </button>
+      <button
+        type="button"
+        role="tab"
+        id="tab-btn-cards"
+        aria-selected="false"
+        aria-controls="panel-cards"
+        class="tab-trigger px-4 py-3 text-base sm:text-lg"
+      >
+        2. Картка завдань
+      </button>
+      <button
+        type="button"
+        role="tab"
+        id="tab-btn-tags"
+        aria-selected="false"
+        aria-controls="panel-tags"
+        class="tab-trigger px-4 py-3 text-base sm:text-lg"
+      >
+        3. Теги з малюнками
+      </button>
+      <button
+        type="button"
+        role="tab"
+        id="tab-btn-quiz"
+        aria-selected="false"
+        aria-controls="panel-quiz"
+        class="tab-trigger px-4 py-3 text-base sm:text-lg"
+      >
+        4. Тест (8 запитань)
+      </button>
+    </nav>
+
+    <!-- =========================================================
+         ВКЛАДКА 1: ТЕОРІЯ ТА ТРЕНАЖЕР
+         ========================================================= -->
+    <section id="panel-theory" role="tabpanel" aria-labelledby="tab-btn-theory" class="space-y-6">
+      <!-- Сонячний банер і поняття гіпертексту й HTML -->
+      <article class="card-box p-5 sm:p-6 space-y-5">
+        <div class="rounded-2xl p-5 text-white shadow-md"
+             style="background: linear-gradient(120deg, #f59e0b 0%, #ea580c 52%, #ec4899 100%);">
+          <p class="text-xs sm:text-sm font-extrabold uppercase tracking-wider opacity-95">Ключове поняття уроку</p>
+          <h2 class="text-xl sm:text-3xl font-extrabold mt-1">Гіпертекст і мова розмічання HTML</h2>
+          <p class="text-sm sm:text-base mt-2 opacity-95">
+            <strong>Гіпертекст</strong> — це текст із вбудованими зв’язками (гіперпосиланнями), що дають змогу миттєво переходити між фрагментами або документами. <strong>HTML</strong> (HyperText Markup Language) — мова розмічання гіпертекстового документа, яка описує його логічну структуру та елементи.
+          </p>
+        </div>
+
+        <!-- Порівняння з мовами програмування та структура документа -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="muted-box p-5 space-y-3">
+            <h3 class="text-lg sm:text-xl font-extrabold">Мова розмічання vs Мова програмування</h3>
+            <ul class="space-y-2 text-sm sm:text-base">
+              <li><strong>HTML — мова розмічання:</strong> визначає структуру документа (заголовки, абзаци, списки, посилання, зображення). Не містить циклів, умов чи обчислень.</li>
+              <li><strong>Мови програмування (Python, JavaScript, C++):</strong> описують алгоритми, обробку даних, умови, цикли та поведінку програм.</li>
+              <li><strong>Взаємодія у веб:</strong> браузер розбирає HTML-розмітку й будує дерево елементів (DOM), а JavaScript додає інтерактивність.</li>
+            </ul>
+          </div>
+
+          <div class="muted-box p-5 space-y-3">
+            <h3 class="text-lg sm:text-xl font-extrabold">Базова структура HTML-документа</h3>
+            <pre class="code-editor p-3.5 text-xs sm:text-sm overflow-x-auto"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="uk"&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Назва сторінки&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Заголовок сторінки&lt;/h1&gt;
+    &lt;p&gt;Основний текст документа.&lt;/p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            <p class="text-xs sm:text-sm" style="color: var(--text-secondary)">
+              <strong>Тег</strong> — команда розмічання у кутових дужках (<code>&lt;p&gt;...&lt;/p&gt;</code> або одинарний <code>&lt;br&gt;</code>); <strong>атрибут</strong> уточнює властивості тега (наприклад, <code>href</code>, <code>src</code>, <code>alt</code>).
+            </p>
+          </div>
+        </div>
+      </article>
+
+      <!-- Живий тренажер розмічання з миттєвим рендерингом -->
+      <article class="card-box p-5 sm:p-6 space-y-5">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 border-b pb-4" style="border-color: var(--border-main)">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-extrabold">Живий тренажер розмічання з миттєвим рендерингом</h2>
+            <p class="text-sm sm:text-base mt-1" style="color: var(--text-secondary)">
+              Редагуйте HTML-код ліворуч — праворуч миттєво оновлюється візуальне подання документа та перевірка парності тегів.
+            </p>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button type="button" id="preset-basic-btn" class="btn-alt px-3.5 py-2 text-xs sm:text-sm">Шаблон 1: Стаття</button>
+            <button type="button" id="preset-list-btn" class="btn-alt px-3.5 py-2 text-xs sm:text-sm">Шаблон 2: Список і посилання</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          <div class="space-y-2">
+            <label for="live-markup-input" class="block font-bold text-sm sm:text-base">
+              HTML-розмітка документа:
+            </label>
+            <textarea
+              id="live-markup-input"
+              rows="11"
+              class="code-editor w-full p-4 text-sm"
+              aria-label="Редактор HTML-розмітки"
+            ></textarea>
+          </div>
+
+          <div class="space-y-2">
+            <div class="flex items-center justify-between gap-2">
+              <span class="font-bold text-sm sm:text-base">Миттєвий рендеринг (вигляд у браузері):</span>
+              <span id="markup-syntax-badge" class="text-xs font-extrabold px-2.5 py-1 rounded-lg border"></span>
+            </div>
+            <div
+              id="live-markup-preview"
+              class="markup-preview muted-box p-4 min-h-[245px] text-sm sm:text-base overflow-auto"
+              aria-live="polite"
+            ></div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Міні-тренажер на 5 ситуацій -->
+      <article class="card-box p-5 sm:p-6 space-y-5">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b pb-4" style="border-color: var(--border-main)">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-extrabold">Міні-тренажер «Обери рішення розмічання» (5 ситуацій)</h2>
+            <p class="text-sm sm:text-base mt-1" style="color: var(--text-secondary)">
+              Визначте правильний елемент або поняття HTML-розмічання для кожної з 5 ситуацій.
+            </p>
+          </div>
+          <span id="markup-mini-score" class="muted-box px-4 py-2 font-bold text-sm sm:text-base">
+            Правильно: 0 / 5
+          </span>
+        </div>
+
+        <div id="markup-mini-list" class="space-y-3"></div>
+      </article>
+    </section>
+
+    <!-- =========================================================
+         ВКЛАДКА 2: КАРТКА ЗАВДАНЬ
+         ========================================================= -->
+    <section id="panel-cards" role="tabpanel" aria-labelledby="tab-btn-cards" class="hidden space-y-6">
+      <div class="card-box p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+          <h2 class="text-lg sm:text-xl font-extrabold">Диференційована картка завдань (Варіант 1 / Варіант 2)</h2>
+          <p class="text-sm sm:text-base" style="color: var(--text-secondary)">
+            Оберіть варіант, виконайте покрокові завдання з розмічання гіпертексту та перевірте результат за чек-листом.
+          </p>
+        </div>
+        <div class="flex flex-wrap gap-2.5" role="group" aria-label="Вибір варіанта картки завдань">
+          <button type="button" id="card-v1-btn" class="btn-alt is-active px-5 py-2.5 text-base font-bold" aria-pressed="true">
+            Варіант 1 (В1)
+          </button>
+          <button type="button" id="card-v2-btn" class="btn-alt px-5 py-2.5 text-base font-bold" aria-pressed="false">
+            Варіант 2 (В2)
+          </button>
+        </div>
+      </div>
+
+      <div id="markup-variant-container" class="space-y-6"></div>
+
+      <!-- Чек-лист самоперевірки -->
+      <article class="card-box p-5 sm:p-6 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b pb-3" style="border-color: var(--border-main)">
+          <div>
+            <h3 class="text-xl font-extrabold">Чек-лист самоперевірки</h3>
+            <p class="text-sm sm:text-base mt-1" style="color: var(--text-secondary)">
+              Позначте виконані критерії перед завершенням практичної роботи.
+            </p>
+          </div>
+          <span id="markup-checklist-counter" class="muted-box px-3.5 py-1.5 font-bold text-sm sm:text-base">
+            Виконано: 0 / 5
+          </span>
+        </div>
+
+        <div id="markup-checklist-items" class="space-y-2.5"></div>
+        <div id="markup-checklist-summary" class="muted-box p-4 text-sm sm:text-base font-semibold">
+          Позначте пункти чек-листа, щоб оцінити готовність роботи.
+        </div>
+      </article>
+    </section>
+
+    <!-- =========================================================
+         ВКЛАДКА 3: ТЕГИ З МАЛЮНКАМИ
+         ========================================================= -->
+    <section id="panel-tags" role="tabpanel" aria-labelledby="tab-btn-tags" class="hidden space-y-6">
+      <article class="card-box p-5 sm:p-6 space-y-5">
+        <div class="rounded-2xl p-5 text-white shadow-md"
+             style="background: linear-gradient(120deg, #ea580c 0%, #f59e0b 55%, #0284c7 100%);">
+          <p class="text-xs sm:text-sm font-extrabold uppercase tracking-wider opacity-95">Візуальний довідник HTML</p>
+          <h2 class="text-xl sm:text-3xl font-extrabold mt-1">Теги та атрибути гіпертекстового документа з SVG-схемами</h2>
+          <p class="text-sm sm:text-base mt-2 opacity-95">
+            Наочні схеми допомагають запам’ятати ієрархію документа, парні та одинарні теги, а також ключові атрибути.
+          </p>
+        </div>
+
+        <div id="html-tags-gallery" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+      </article>
+
+      <!-- Міні-гра на відповідність -->
+      <article class="card-box p-5 sm:p-6 space-y-5">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b pb-4" style="border-color: var(--border-main)">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-extrabold">Міні-гра на відповідність: «Тег / Атрибут — Призначення»</h2>
+            <p class="text-sm sm:text-base mt-1" style="color: var(--text-secondary)">
+              Зіставте кожен елемент HTML із його призначенням і натисніть кнопку перевірки.
+            </p>
+          </div>
+          <span id="matching-score-badge" class="muted-box px-4 py-2 font-bold text-sm sm:text-base">
+            Результат: ще не перевірено
+          </span>
+        </div>
+
+        <div id="matching-game-rows" class="space-y-3"></div>
+
+        <div class="flex flex-wrap gap-2.5">
+          <button type="button" id="check-matching-btn" class="btn-main px-5 py-2.5 text-sm sm:text-base">
+            Перевірити відповідність
+          </button>
+          <button type="button" id="reset-matching-btn" class="btn-alt px-4 py-2.5 text-sm sm:text-base">
+            Скинути вибір
+          </button>
+        </div>
+
+        <div id="matching-feedback-box" class="hidden p-4 rounded-xl border-2 text-sm sm:text-base"></div>
+      </article>
+    </section>
+
+    <!-- =========================================================
+         ВКЛАДКА 4: ТЕСТ (8 ЗАПИТАНЬ)
+         ========================================================= -->
+    <section id="panel-quiz" role="tabpanel" aria-labelledby="tab-btn-quiz" class="hidden space-y-6">
+      <article class="card-box p-5 sm:p-6 space-y-5">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 border-b pb-4" style="border-color: var(--border-main)">
+          <div class="space-y-1">
+            <h2 class="text-xl sm:text-2xl font-extrabold">Підсумковий тест (8 запитань)</h2>
+            <p class="text-sm sm:text-base" style="color: var(--text-secondary)">
+              Варіанти відповідей перемішуються автоматично; правильні відповіді не стоять першими та рівномірно розподілені між 1-ю, 2-ю, 3-ю і 4-ю позиціями.
+            </p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2.5">
+            <span id="quiz-answered-badge" class="muted-box px-3.5 py-2 font-bold text-sm sm:text-base">
+              Відповідей: 0 / 8
+            </span>
+            <span id="quiz-score-badge" class="muted-box px-4 py-2 font-extrabold text-sm sm:text-base">
+              Бали: 0 / 8
+            </span>
+            <button type="button" id="quiz-restart-btn" class="btn-alt px-4 py-2 text-sm sm:text-base font-bold">
+              Пройти тест заново (перемішати)
+            </button>
+          </div>
+        </div>
+
+        <div class="w-full h-3.5 rounded-full overflow-hidden border" style="background-color: var(--bg-muted); border-color: var(--border-strong);">
+          <div id="quiz-progress-fill" class="h-full transition-all duration-300" style="width: 0%; background: linear-gradient(90deg, #f59e0b, #ea580c);"></div>
+        </div>
+
+        <div id="quiz-summary-panel" class="hidden p-4 sm:p-5 rounded-2xl border-2 text-sm sm:text-base"></div>
+
+        <div id="quiz-items-container" class="space-y-4"></div>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      'use strict';
+
+      const statusBox = document.getElementById('status-box');
+      let statusTimer = null;
+
+      function showStatus(msg, type) {
+        if (!statusBox) return;
+        if (statusTimer) clearTimeout(statusTimer);
+        statusBox.textContent = msg;
+        statusBox.classList.remove('hidden');
+
+        if (type === 'err') {
+          statusBox.style.backgroundColor = 'var(--err-bg)';
+          statusBox.style.color = 'var(--err-text)';
+          statusBox.style.borderColor = 'var(--err-border)';
+        } else if (type === 'warn') {
+          statusBox.style.backgroundColor = 'var(--warn-bg)';
+          statusBox.style.color = 'var(--warn-text)';
+          statusBox.style.borderColor = 'var(--warn-border)';
+        } else {
+          statusBox.style.backgroundColor = 'var(--ok-bg)';
+          statusBox.style.color = 'var(--ok-text)';
+          statusBox.style.borderColor = 'var(--ok-border)';
+        }
+
+        statusTimer = setTimeout(() => {
+          statusBox.classList.add('hidden');
+        }, 4000);
+      }
+
+      function escapeHtml(str) {
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+
+      // Панель доступності: масштаб шрифту (100%, 125%, 150%)
+      const scaleButtons = document.querySelectorAll('.font-scale-btn');
+      scaleButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const scale = btn.getAttribute('data-font-scale') || '1';
+          document.documentElement.style.setProperty('--font-scale', scale);
+          scaleButtons.forEach((b) => {
+            const active = b === btn;
+            b.classList.toggle('is-active', active);
+            b.setAttribute('aria-pressed', String(active));
+          });
+          showStatus(`Масштаб шрифту змінено на ${Math.round(parseFloat(scale) * 100)}%.`, 'ok');
+        });
+      });
+
+      // Висококонтрастна тема
+      const contrastBtn = document.getElementById('contrast-btn');
+      contrastBtn.addEventListener('click', () => {
+        const active = document.body.classList.toggle('high-contrast');
+        contrastBtn.setAttribute('aria-pressed', String(active));
+        showStatus(
+          active ? 'Увімкнено висококонтрастний режим.' : 'Повернено сонячну тему.',
+          'ok'
+        );
+      });
+
+      // Перемикання 4 вкладок
+      const tabs = document.querySelectorAll('[role="tab"]');
+      const panels = document.querySelectorAll('[role="tabpanel"]');
+      tabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+          tabs.forEach((t) => t.setAttribute('aria-selected', String(t === tab)));
+          panels.forEach((p) => {
+            p.classList.toggle('hidden', p.getAttribute('aria-labelledby') !== tab.id);
+          });
+        });
+      });
+
+      // =========================================================
+      // ВКЛАДКА 1: ЖИВИЙ ТРЕНАЖЕР РОЗМІЧАННЯ ТА МІНІ-ТРЕНЕР (5 СИТУАЦІЙ)
+      // =========================================================
+      const markupInput = document.getElementById('live-markup-input');
+      const markupPreview = document.getElementById('live-markup-preview');
+      const markupSyntaxBadge = document.getElementById('markup-syntax-badge');
+
+      const presets = {
+        basic: `<h1>Гіпертекстовий документ</h1>
+<p>Мова <strong>HTML</strong> описує структуру вебсторінки за допомогою <em>тегів</em>.</p>
+<hr>
+<h2>Основні елементи</h2>
+<p>Заголовки, абзаци, списки та гіперпосилання формують логічну будову документа.</p>`,
+        list: `<h2>Навігація шкільного порталу</h2>
+<p>Оберіть потрібний розділ:</p>
+<ol>
+  <li>Розклад занять 11 класу</li>
+  <li>Матеріали з інформатики</li>
+  <li><a href="#top">Повернутися до початку сторінки</a></li>
+</ol>`
+      };
+
+      const allowedTags = new Set([
+        'H1', 'H2', 'H3', 'H4', 'P', 'BR', 'HR',
+        'STRONG', 'B', 'EM', 'I', 'U', 'MARK',
+        'UL', 'OL', 'LI', 'A', 'SPAN', 'DIV', 'BLOCKQUOTE'
+      ]);
+
+      function sanitizeMarkupForPreview(rawHtml) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(`<div>${rawHtml}</div>`, 'text/html');
+        const root = doc.body.firstElementChild;
+        if (!root) return '';
+
+        function cleanNode(node) {
+          const frag = document.createDocumentFragment();
+          Array.from(node.childNodes).forEach((child) => {
+            if (child.nodeType === Node.TEXT_NODE) {
+              frag.appendChild(document.createTextNode(child.nodeValue));
+            } else if (child.nodeType === Node.ELEMENT_NODE) {
+              const tagName = child.tagName.toUpperCase();
+              if (!allowedTags.has(tagName)) {
+                frag.appendChild(cleanNode(child));
+                return;
+              }
+              const safeEl = document.createElement(tagName.toLowerCase());
+              if (tagName === 'A') {
+                const href = child.getAttribute('href') || '#';
+                if (/^\s*javascript:/i.test(href)) {
+                  safeEl.setAttribute('href', '#');
+                } else {
+                  safeEl.setAttribute('href', href);
+                }
+              }
+              safeEl.appendChild(cleanNode(child));
+              frag.appendChild(safeEl);
+            }
+          });
+          return frag;
+        }
+
+        const out = document.createElement('div');
+        out.appendChild(cleanNode(root));
+        return out.innerHTML;
+      }
+
+      function checkTagBalance(rawHtml) {
+        const voidTags = new Set(['BR', 'HR', 'IMG', 'META', 'LINK', 'INPUT']);
+        const stack = [];
+        const tagRegex = /<\/?([a-zA-Z][a-zA-Z0-9]*)\b[^>]*>/g;
+        let match;
+        while ((match = tagRegex.exec(rawHtml)) !== null) {
+          const full = match[0];
+          const name = match[1].toUpperCase();
+          if (voidTags.has(name) || full.endsWith('/>')) continue;
+          if (full.startsWith('</')) {
+            if (!stack.length || stack[stack.length - 1] !== name) {
+              return { ok: false, msg: `Порушено закриття або вкладеність тега </${name.toLowerCase()}>` };
+            }
+            stack.pop();
+          } else {
+            stack.push(name);
+          }
+        }
+        if (stack.length > 0) {
+          return { ok: false, msg: `Не закрито тег: <${stack[stack.length - 1].toLowerCase()}>` };
+        }
+        return { ok: true, msg: 'Парні теги збалансовані' };
+      }
+
+      function updateLiveMarkup() {
+        const raw = markupInput.value;
+        markupPreview.innerHTML = sanitizeMarkupForPreview(raw);
+        const status = checkTagBalance(raw);
+        markupSyntaxBadge.textContent = status.msg;
+        if (status.ok) {
+          markupSyntaxBadge.style.backgroundColor = 'var(--ok-bg)';
+          markupSyntaxBadge.style.color = 'var(--ok-text)';
+          markupSyntaxBadge.style.borderColor = 'var(--ok-border)';
+        } else {
+          markupSyntaxBadge.style.backgroundColor = 'var(--warn-bg)';
+          markupSyntaxBadge.style.color = 'var(--warn-text)';
+          markupSyntaxBadge.style.borderColor = 'var(--warn-border)';
+        }
+      }
+
+      markupInput.value = presets.basic;
+      updateLiveMarkup();
+      markupInput.addEventListener('input', updateLiveMarkup);
+      document.getElementById('preset-basic-btn').addEventListener('click', () => {
+        markupInput.value = presets.basic;
+        updateLiveMarkup();
+      });
+      document.getElementById('preset-list-btn').addEventListener('click', () => {
+        markupInput.value = presets.list;
+        updateLiveMarkup();
+      });
+
+      // Міні-тренажер на 5 ситуацій
+      const markupSituations = [
+        {
+          q: '1. Потрібно задати головний заголовок вебсторінки вищого рівня.',
+          options: ['<h1>...</h1>', '<title>...</title>', '<br>'],
+          correct: 0,
+          why: 'Тег <h1> позначає головний заголовок першого рівня в тілі документа.'
+        },
+        {
+          q: '2. Потрібно вказати адресу переходу для гіперпосилання <a>.',
+          options: ['src', 'href', 'alt'],
+          correct: 1,
+          why: 'Атрибут href (Hypertext Reference) задає URL або якір переходу для тега <a>.'
+        },
+        {
+          q: '3. Потрібно створити впорядкований перелік кроків алгоритму (1, 2, 3...).',
+          options: ['<ul>...</ul>', '<ol>...</ol>', '<hr>'],
+          correct: 1,
+          why: 'Тег <ol> (Ordered List) створює нумерований список із пунктами <li>.'
+        },
+        {
+          q: '4. Потрібно вставити альтернативний текстовий опис для зображення <img>.',
+          options: ['alt', 'href', 'lang'],
+          correct: 0,
+          why: 'Атрибут alt забезпечує доступність, описуючи зображення, якщо воно не завантажилось.'
+        },
+        {
+          q: '5. Що відрізняє HTML від мов програмування (наприклад, Python)?',
+          options: [
+            'HTML описує структуру документа, а не алгоритм обчислень',
+            'HTML виконує цикли та рекурсію',
+            'HTML компілюється у машинний код без браузера'
+          ],
+          correct: 0,
+          why: 'HTML є мовою розмічання гіпертексту і визначає структуру елементів документа.'
+        }
+      ];
+
+      const miniListEl = document.getElementById('markup-mini-list');
+      const miniScoreEl = document.getElementById('markup-mini-score');
+      const miniState = {};
+
+      function renderMiniSituations() {
+        let right = 0;
+        markupSituations.forEach((item, idx) => {
+          if (miniState[idx] === item.correct) right += 1;
+        });
+        miniScoreEl.textContent = `Правильно: ${right} / ${markupSituations.length}`;
+
+        miniListEl.innerHTML = markupSituations
+          .map((item, idx) => {
+            const chosen = miniState[idx];
+            const answered = chosen !== undefined;
+            const ok = answered && chosen === item.correct;
+            return `
+              <div class="muted-box p-4 space-y-2.5">
+                <p class="font-bold text-sm sm:text-base">${escapeHtml(item.q)}</p>
+                <div class="flex flex-wrap gap-2">
+                  ${item.options
+                    .map(
+                      (opt, oIdx) => `
+                    <button
+                      type="button"
+                      data-ms-idx="${idx}"
+                      data-ms-opt="${oIdx}"
+                      class="ms-choice-btn btn-alt px-3.5 py-2 text-xs sm:text-sm"
+                      aria-pressed="${String(chosen === oIdx)}"
+                    >
+                      ${escapeHtml(opt)}
+                    </button>
+                  `
+                    )
+                    .join('')}
+                </div>
+                ${
+                  answered
+                    ? `<div class="p-3 rounded-xl border text-xs sm:text-sm" style="${
+                        ok
+                          ? 'background-color: var(--ok-bg); color: var(--ok-text); border-color: var(--ok-border);'
+                          : 'background-color: var(--warn-bg); color: var(--warn-text); border-color: var(--warn-border);'
+                      }">
+                        <strong>${ok ? 'Вірно!' : 'Пояснення:'}</strong> ${escapeHtml(item.why)}
+                      </div>`
+                    : ''
+                }
+              </div>
+            `;
+          })
+          .join('');
+
+        miniListEl.querySelectorAll('.ms-choice-btn').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const idx = Number(btn.getAttribute('data-ms-idx'));
+            const opt = Number(btn.getAttribute('data-ms-opt'));
+            miniState[idx] = opt;
+            renderMiniSituations();
+          });
+        });
+      }
+
+      renderMiniSituations();
+
+      // =========================================================
+      // ВКЛАДКА 2: КАРТКА ЗАВДАНЬ (В1 / В2) + ЧЕК-ЛИСТ
+      // =========================================================
+      const variantsInfo = {
+        1: {
+          title: 'Варіант 1 (В1) — Базовий рівень: структура документа та базові теги',
+          steps: [
+            '1. Сформулюйте визначення гіпертексту та мови розмічання HTML своїми словами.',
+            '2. Запишіть каркас HTML-документа з <code>&lt;!DOCTYPE html&gt;</code>, <code>&lt;html&gt;</code>, <code>&lt;head&gt;</code>, <code>&lt;title&gt;</code> та <code>&lt;body&gt;</code>.',
+            '3. У розділі <code>&lt;body&gt;</code> створіть заголовок <code>&lt;h1&gt;</code> і два абзаци <code>&lt;p&gt;</code> про роль гіперпосилань.',
+            '4. Перевірте у живому тренажері на Вкладці 1, чи всі парні теги мають закривальні пари.'
+          ],
+          checks: [
+            {
+              prompt: 'Який тег містить заголовок вкладки браузера?',
+              options: ['<title>', '<h1>', '<body>'],
+              correct: 0
+            },
+            {
+              prompt: 'Який тег відкриває основну видиму частину документа?',
+              options: ['<head>', '<body>', '<meta>'],
+              correct: 1
+            }
+          ],
+          note: 'У <head> розміщують <title> і метадані, а в <body> — видимий вміст сторінки.'
+        },
+        2: {
+          title: 'Варіант 2 (В2) — Ускладнений рівень: списки, гіперпосилання, атрибути й вкладеність',
+          steps: [
+            '1. Побудуйте фрагмент HTML для довідки з 3 пунктів: маркований список <code>&lt;ul&gt;</code> із елементами <code>&lt;li&gt;</code>.',
+            '2. Додайте гіперпосилання <code>&lt;a href="..."&gt;</code> та зображення <code>&lt;img src="..." alt="..."&gt;</code> із коректними атрибутами.',
+            '3. Знайдіть і виправте порушення вкладеності у фрагменті <code>&lt;p&gt;&lt;h2&gt;Тема&lt;/p&gt;&lt;/h2&gt;</code>.',
+            '4. Поясніть, чому мова розмічання не замінює мову програмування.'
+          ],
+          checks: [
+            {
+              prompt: 'Який атрибут тега <img> задає шлях до графічного файлу?',
+              options: ['href', 'src', 'title'],
+              correct: 1
+            },
+            {
+              prompt: 'Який запис має правильну вкладеність парних тегів?',
+              options: ['<strong><em>Текст</em></strong>', '<strong><em>Текст</strong></em>', '<p><h1>Заголовок</h1></p>'],
+              correct: 0
+            }
+          ],
+          note: 'Внутрішній тег має закриватися раніше за зовнішній: <strong><em>...</em></strong>.'
+        }
+      };
+
+      const variantContainer = document.getElementById('markup-variant-container');
+      const cardV1Btn = document.getElementById('card-v1-btn');
+      const cardV2Btn = document.getElementById('card-v2-btn');
+
+      function renderVariantCard(vNum) {
+        cardV1Btn.classList.toggle('is-active', vNum === 1);
+        cardV1Btn.setAttribute('aria-pressed', String(vNum === 1));
+        cardV2Btn.classList.toggle('is-active', vNum === 2);
+        cardV2Btn.setAttribute('aria-pressed', String(vNum === 2));
+
+        const info = variantsInfo[vNum];
+        variantContainer.innerHTML = `
+          <div class="card-box p-5 sm:p-6 space-y-5">
+            <h3 class="text-xl sm:text-2xl font-extrabold border-b pb-3" style="border-color: var(--border-main)">
+              ${escapeHtml(info.title)}
+            </h3>
+            <div class="muted-box p-4 sm:p-5 space-y-2">
+              <h4 class="font-extrabold text-base sm:text-lg">Покрокові завдання:</h4>
+              <ul class="space-y-2 text-sm sm:text-base">
+                ${info.steps.map((s) => `<li>${s}</li>`).join('')}
+              </ul>
+            </div>
+            <div class="space-y-3">
+              <h4 class="font-extrabold text-base sm:text-lg">Міні-контроль до варіанта:</h4>
+              ${info.checks
+                .map(
+                  (c, idx) => `
+                <div class="muted-box p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                  <label for="v-${vNum}-c-${idx}" class="text-sm sm:text-base font-semibold flex-1">
+                    ${escapeHtml(c.prompt)}
+                  </label>
+                  <select id="v-${vNum}-c-${idx}" class="w-full md:w-72 text-sm sm:text-base">
+                    <option value="">— Оберіть відповідь —</option>
+                    ${c.options.map((o, oIdx) => `<option value="${oIdx}">${escapeHtml(o)}</option>`).join('')}
+                  </select>
+                </div>
+              `
+                )
+                .join('')}
+            </div>
+            <button type="button" id="check-variant-card-btn" class="btn-main px-5 py-2.5 text-sm sm:text-base">
+              Перевірити відповіді картки
+            </button>
+            <div id="variant-card-feedback" class="hidden p-4 rounded-xl border-2 text-sm sm:text-base"></div>
+          </div>
+        `;
+
+        document.getElementById('check-variant-card-btn').addEventListener('click', () => {
+          const fb = document.getElementById('variant-card-feedback');
+          let answered = 0;
+          let correct = 0;
+          info.checks.forEach((c, idx) => {
+            const sel = document.getElementById(`v-${vNum}-c-${idx}`);
+            if (sel && sel.value !== '') {
+              answered += 1;
+              if (Number(sel.value) === c.correct) correct += 1;
+            }
+          });
+
+          fb.classList.remove('hidden');
+          if (answered < info.checks.length) {
+            fb.style.backgroundColor = 'var(--warn-bg)';
+            fb.style.color = 'var(--warn-text)';
+            fb.style.borderColor = 'var(--warn-border)';
+            fb.innerHTML = '<strong>Увага:</strong> Оберіть відповідь на обидва контрольні запитання картки.';
+            return;
+          }
+
+          if (correct === info.checks.length) {
+            fb.style.backgroundColor = 'var(--ok-bg)';
+            fb.style.color = 'var(--ok-text)';
+            fb.style.borderColor = 'var(--ok-border)';
+            fb.innerHTML = `<strong>Відмінно (${correct}/${info.checks.length})!</strong> ${escapeHtml(info.note)}`;
+            showStatus('Картку завдань перевірено: усі відповіді правильні!', 'ok');
+          } else {
+            fb.style.backgroundColor = 'var(--err-bg)';
+            fb.style.color = 'var(--err-text)';
+            fb.style.borderColor = 'var(--err-border)';
+            fb.innerHTML = `<strong>Правильно ${correct} із ${info.checks.length}.</strong> ${escapeHtml(info.note)}`;
+            showStatus('Перевірте вибір у картці завдань.', 'warn');
+          }
+        });
+      }
+
+      cardV1Btn.addEventListener('click', () => renderVariantCard(1));
+      cardV2Btn.addEventListener('click', () => renderVariantCard(2));
+      renderVariantCard(1);
+
+      // Чек-лист самоперевірки
+      const checklistData = [
+        'Визначено поняття гіпертексту та мови розмічання HTML.',
+        'Побудовано базову структуру документа (html, head, title, body).',
+        'Застосовано теги заголовків, абзаців або списків.',
+        'Використано атрибути (наприклад, href, src, alt, lang).',
+        'Перевірено правильність закриття парних тегів і вкладеності.'
+      ];
+      const checklistEl = document.getElementById('markup-checklist-items');
+      const checklistCounter = document.getElementById('markup-checklist-counter');
+      const checklistSummary = document.getElementById('markup-checklist-summary');
+      const checkedIndices = new Set();
+
+      function renderChecklist() {
+        checklistEl.innerHTML = checklistData
+          .map(
+            (txt, idx) => `
+          <label class="muted-box p-3.5 flex items-start gap-3 cursor-pointer text-sm sm:text-base">
+            <input type="checkbox" data-cl-idx="${idx}" ${checkedIndices.has(idx) ? 'checked' : ''} class="mt-1 w-5 h-5 shrink-0 cursor-pointer" />
+            <span>${escapeHtml(txt)}</span>
+          </label>
+        `
+          )
+          .join('');
+
+        const n = checkedIndices.size;
+        checklistCounter.textContent = `Виконано: ${n} / ${checklistData.length}`;
+        if (n === 0) {
+          checklistSummary.textContent = 'Позначте пункти чек-листа, щоб оцінити готовність роботи.';
+        } else if (n < checklistData.length) {
+          checklistSummary.textContent = `Виконано ${n} із ${checklistData.length} пунктів. Завершіть решту кроків.`;
+        } else {
+          checklistSummary.textContent = 'Чудово! Усі 5 критеріїв самоперевірки виконано.';
+        }
+
+        checklistEl.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
+          cb.addEventListener('change', () => {
+            const i = Number(cb.getAttribute('data-cl-idx'));
+            if (cb.checked) checkedIndices.add(i);
+            else checkedIndices.delete(i);
+            renderChecklist();
+          });
+        });
+      }
+
+      renderChecklist();
+
+      // =========================================================
+      // ВКЛАДКА 3: ТЕГИ З МАЛЮНКАМИ (SVG-СХЕМИ) ТА МІНІ-ГРА НА ВІДПОВІДНІСТЬ
+      // =========================================================
+      const htmlTagsVisual = [
+        {
+          tag: '<html> ... </html>',
+          role: 'Кореневий контейнер усього HTML-документа',
+          attr: 'Атрибут: lang="uk"',
+          svg: `<svg viewBox="0 0 200 90" class="w-full h-22" role="img" aria-label="Схема кореневого тега html">
+            <rect x="10" y="8" width="180" height="74" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="2.5"/>
+            <text x="24" y="30" font-size="12" font-weight="800" fill="#92400e">&lt;html lang="uk"&gt;</text>
+            <rect x="24" y="38" width="152" height="14" rx="4" fill="#ffffff" stroke="#f59e0b"/>
+            <text x="32" y="49" font-size="10" font-weight="700" fill="#0f172a">&lt;head&gt; ... &lt;/head&gt;</text>
+            <rect x="24" y="56" width="152" height="16" rx="4" fill="#ffffff" stroke="#ea580c"/>
+            <text x="32" y="68" font-size="10" font-weight="700" fill="#0f172a">&lt;body&gt; ... &lt;/body&gt;</text>
+          </svg>`
+        },
+        {
+          tag: '<head> та <title>',
+          role: 'Метадані документа та назва вкладки браузера',
+          attr: 'Атрибут: charset="UTF-8"',
+          svg: `<svg viewBox="0 0 200 90" class="w-full h-22" role="img" aria-label="Схема заголовкової частини head">
+            <rect x="10" y="8" width="180" height="74" rx="10" fill="#ffedd5" stroke="#ea580c" stroke-width="2.5"/>
+            <text x="24" y="30" font-size="12" font-weight="800" fill="#9a3412">&lt;head&gt;</text>
+            <rect x="24" y="38" width="152" height="14" rx="4" fill="#ffffff" stroke="#f97316"/>
+            <text x="32" y="49" font-size="10" font-weight="700" fill="#0f172a">&lt;meta charset="UTF-8"&gt;</text>
+            <rect x="24" y="56" width="152" height="16" rx="4" fill="#ffffff" stroke="#f97316"/>
+            <text x="32" y="68" font-size="10" font-weight="700" fill="#0f172a">&lt;title&gt;Сторінка&lt;/title&gt;</text>
+          </svg>`
+        },
+        {
+          tag: '<h1> ... <h6> та <p>',
+          role: 'Заголовки розділів і текстові абзаци',
+          attr: 'Парні блокові теги',
+          svg: `<svg viewBox="0 0 200 90" class="w-full h-22" role="img" aria-label="Схема заголовка та абзацу">
+            <rect x="10" y="8" width="180" height="74" rx="10" fill="#fffbeb" stroke="#f59e0b" stroke-width="2.5"/>
+            <text x="24" y="34" font-size="15" font-weight="800" fill="#b45309">&lt;h1&gt;Заголовок&lt;/h1&gt;</text>
+            <line x1="24" y1="44" x2="174" y2="44" stroke="#f59e0b" stroke-width="2"/>
+            <text x="24" y="62" font-size="11" font-weight="600" fill="#1e293b">&lt;p&gt;Абзац тексту...&lt;/p&gt;</text>
+          </svg>`
+        },
+        {
+          tag: '<ul>, <ol>, <li>',
+          role: 'Марковані та нумеровані списки',
+          attr: 'Вкладені елементи <li>',
+          svg: `<svg viewBox="0 0 200 90" class="w-full h-22" role="img" aria-label="Схема списку">
+            <rect x="10" y="8" width="180" height="74" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="2.5"/>
+            <text x="24" y="28" font-size="11" font-weight="800" fill="#92400e">&lt;ul&gt; / &lt;ol&gt;</text>
+            <circle cx="32" cy="45" r="3.5" fill="#ea580c"/>
+            <text x="42" y="49" font-size="10" font-weight="700" fill="#0f172a">&lt;li&gt;Пункт 1&lt;/li&gt;</text>
+            <circle cx="32" cy="64" r="3.5" fill="#ea580c"/>
+            <text x="42" y="68" font-size="10" font-weight="700" fill="#0f172a">&lt;li&gt;Пункт 2&lt;/li&gt;</text>
+          </svg>`
+        },
+        {
+          tag: '<a href="...">',
+          role: 'Гіперпосилання для переходу на ресурс або якір',
+          attr: 'Атрибут: href="URL"',
+          svg: `<svg viewBox="0 0 200 90" class="w-full h-22" role="img" aria-label="Схема гіперпосилання">
+            <rect x="10" y="8" width="180" height="74" rx="10" fill="#e0f2fe" stroke="#0284c7" stroke-width="2.5"/>
+            <text x="24" y="38" font-size="12" font-weight="800" fill="#0369a1">&lt;a href="..."&gt;Текст&lt;/a&gt;</text>
+            <path d="M 30 58 L 155 58" stroke="#0284c7" stroke-width="3"/>
+            <polygon points="155,58 145,52 145,64" fill="#0284c7"/>
+            <text x="30" y="74" font-size="10" font-weight="700" fill="#0f172a">Гіпертекстовий зв’язок</text>
+          </svg>`
+        },
+        {
+          tag: '<img src="..." alt="...">',
+          role: 'Вставка зображення (одинарний тег)',
+          attr: 'Атрибути: src, alt',
+          svg: `<svg viewBox="0 0 200 90" class="w-full h-22" role="img" aria-label="Схема зображення img">
+            <rect x="10" y="8" width="180" height="74" rx="10" fill="#ffedd5" stroke="#ea580c" stroke-width="2.5"/>
+            <rect x="24" y="20" width="52" height="48" rx="6" fill="#ffffff" stroke="#ea580c" stroke-width="2"/>
+            <circle cx="40" cy="35" r="6" fill="#f59e0b"/>
+            <polygon points="28,62 44,44 56,56 64,48 72,62" fill="#ea580c"/>
+            <text x="86" y="38" font-size="11" font-weight="800" fill="#9a3412">&lt;img src="..."&gt;</text>
+            <text x="86" y="56" font-size="10" font-weight="700" fill="#0f172a">alt="опис"</text>
+          </svg>`
+        }
+      ];
+
+      document.getElementById('html-tags-gallery').innerHTML = htmlTagsVisual
+        .map(
+          (item) => `
+          <article class="muted-box p-4 sm:p-5 space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <h3 class="text-lg font-extrabold"><code>${escapeHtml(item.tag)}</code></h3>
+              <span class="text-xs font-bold px-2.5 py-1 rounded-lg border" style="border-color: var(--border-strong);">${escapeHtml(item.attr)}</span>
+            </div>
+            <div class="rounded-xl overflow-hidden border" style="border-color: var(--border-main)">
+              ${item.svg}
+            </div>
+            <p class="text-sm sm:text-base"><strong>Призначення:</strong> ${escapeHtml(item.role)}</p>
+          </article>
+        `
+        )
+        .join('');
+
+      // Міні-гра на відповідність
+      const matchingPairs = [
+        { left: '<html>', answer: 'Кореневий елемент усього HTML-документа' },
+        { left: '<title>', answer: 'Заголовок вкладки браузера у розділі <head>' },
+        { left: '<a>', answer: 'Створення гіперпосилання з атрибутом href' },
+        { left: '<img>', answer: 'Одинарний тег вставки зображення (src, alt)' },
+        { left: '<ol>', answer: 'Нумерований список із пунктами <li>' }
+      ];
+      const matchingOptionsPool = [
+        'Кореневий елемент усього HTML-документа',
+        'Заголовок вкладки браузера у розділі <head>',
+        'Створення гіперпосилання з атрибутом href',
+        'Одинарний тег вставки зображення (src, alt)',
+        'Нумерований список із пунктами <li>'
+      ];
+
+      const matchingRowsEl = document.getElementById('matching-game-rows');
+      const matchingScoreBadge = document.getElementById('matching-score-badge');
+      const matchingFeedback = document.getElementById('matching-feedback-box');
+
+      function renderMatchingGame() {
+        matchingRowsEl.innerHTML = matchingPairs
+          .map(
+            (pair, idx) => `
+          <div class="muted-box p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            <div class="font-extrabold text-base"><code>${escapeHtml(pair.left)}</code></div>
+            <select id="match-select-${idx}" class="w-full md:w-[32rem] text-sm sm:text-base" aria-label="Відповідність для ${escapeHtml(pair.left)}">
+              <option value="">— Оберіть призначення —</option>
+              ${matchingOptionsPool.map((opt) => `<option value="${escapeHtml(opt)}">${escapeHtml(opt)}</option>`).join('')}
+            </select>
+          </div>
+        `
+          )
+          .join('');
+      }
+
+      renderMatchingGame();
+
+      document.getElementById('check-matching-btn').addEventListener('click', () => {
+        let filled = 0;
+        let correct = 0;
+        matchingPairs.forEach((pair, idx) => {
+          const sel = document.getElementById(`match-select-${idx}`);
+          if (sel && sel.value !== '') {
+            filled += 1;
+            if (sel.value === pair.answer) correct += 1;
+          }
+        });
+
+        matchingFeedback.classList.remove('hidden');
+        if (filled < matchingPairs.length) {
+          matchingScoreBadge.textContent = `Заповнено: ${filled} / ${matchingPairs.length}`;
+          matchingFeedback.style.backgroundColor = 'var(--warn-bg)';
+          matchingFeedback.style.color = 'var(--warn-text)';
+          matchingFeedback.style.borderColor = 'var(--warn-border)';
+          matchingFeedback.innerHTML = '<strong>Увага:</strong> Оберіть відповідність для всіх 5 елементів.';
+          return;
+        }
+
+        matchingScoreBadge.textContent = `Правильно: ${correct} / ${matchingPairs.length}`;
+        if (correct === matchingPairs.length) {
+          matchingFeedback.style.backgroundColor = 'var(--ok-bg)';
+          matchingFeedback.style.color = 'var(--ok-text)';
+          matchingFeedback.style.borderColor = 'var(--ok-border)';
+          matchingFeedback.innerHTML = `<strong>Чудово (${correct}/${matchingPairs.length})!</strong> Усі відповідності встановлено правильно.`;
+          showStatus('Міні-гру на відповідність пройдено без помилок!', 'ok');
+        } else {
+          matchingFeedback.style.backgroundColor = 'var(--err-bg)';
+          matchingFeedback.style.color = 'var(--err-text)';
+          matchingFeedback.style.borderColor = 'var(--err-border)';
+          matchingFeedback.innerHTML = `<strong>Правильно ${correct} із ${matchingPairs.length}.</strong> Перевірте зіставлення тегів і атрибутів.`;
+          showStatus('Є неточності у зіставленні тегів.', 'warn');
+        }
+      });
+
+      document.getElementById('reset-matching-btn').addEventListener('click', () => {
+        renderMatchingGame();
+        matchingScoreBadge.textContent = 'Результат: ще не перевірено';
+        matchingFeedback.classList.add('hidden');
+      });
+
+      // =========================================================
+      // ВКЛАДКА 4: ТЕСТ (8 ЗАПИТАНЬ)
+      // Правильні відповіді НЕ стоять першими, розподілені рівномірно
+      // між 1-м, 2-м, 3-м, 4-м варіантом, і перемішуються на старті та рестарті
+      // =========================================================
+      const rawQuizQuestions = [
+        {
+          q: '1. Що означає абревіатура HTML?',
+          correctText: 'HyperText Markup Language — мова розмічання гіпертексту',
+          distractors: [
+            'High Transfer Machine Logic — логіка машинного перекладу',
+            'Hyperlink Text Memory Loader — завантажувач пам’яті посилань',
+            'Home Terminal Management Layer — шар керування терміналом'
+          ],
+          explanation: 'HTML розшифровується як HyperText Markup Language (мова розмічання гіпертексту).'
+        },
+        {
+          q: '2. Чим гіпертекст відрізняється від звичайного лінійного тексту?',
+          correctText: 'Містить гіперпосилання для переходів між фрагментами й документами',
+          distractors: [
+            'Не містить жодних літер і складається лише з цифр',
+            'Працює лише без підключення до локальної мережі',
+            'Забороняє використання заголовків і абзаців'
+          ],
+          explanation: 'Гіпертекст поєднує текстові блоки гіперпосиланнями, створюючи нелінійну навігацію.'
+        },
+        {
+          q: '3. Яка головна відмінність мови розмічання HTML від мови програмування?',
+          correctText: 'HTML описує структуру й елементи документа, а не алгоритм обчислень',
+          distractors: [
+            'HTML компілюється у драйвер відеокарти',
+            'HTML виконує цикли while і рекурсію без браузера',
+            'HTML зберігає дані виключно у двійковому архіві'
+          ],
+          explanation: 'Мова розмічання визначає структуру документа, тоді як мови програмування задають алгоритми.'
+        },
+        {
+          q: '4. Який тег відкриває основну видиму частину HTML-документа?',
+          correctText: '<body>',
+          distractors: [
+            '<head>',
+            '<!DOCTYPE html>',
+            '<title>'
+          ],
+          explanation: 'Видимий вміст вебсторінки розміщується всередині тега <body>.'
+        },
+        {
+          q: '5. Де зазвичай розміщують тег <title> та кодування <meta charset="UTF-8">?',
+          correctText: 'У розділі <head>',
+          distractors: [
+            'У кінці абзацу <p>',
+            'Всередині списку <ol>',
+            'У атрибуті alt зображення'
+          ],
+          explanation: 'Метадані документа та назва вкладки браузера містяться у контейнері <head>.'
+        },
+        {
+          q: '6. Який атрибут тега <a> задає адресу переходу гіперпосилання?',
+          correctText: 'href',
+          distractors: [
+            'src',
+            'alt',
+            'rows'
+          ],
+          explanation: 'Атрибут href вказує цільову адресу (URL або якір) для тега <a>.'
+        },
+        {
+          q: '7. Які атрибути є ключовими для одинарного тега вставки зображення <img>?',
+          correctText: 'src та alt',
+          distractors: [
+            'href та target',
+            'colspan та rowspan',
+            'action та method'
+          ],
+          explanation: 'Атрибут src задає шлях до файлу зображення, а alt — текстовий опис.'
+        },
+        {
+          q: '8. Який запис демонструє правильну вкладеність парних тегів HTML?',
+          correctText: '<strong><em>Виділений текст</em></strong>',
+          distractors: [
+            '<strong><em>Виділений текст</strong></em>',
+            '<p><h1>Заголовок у абзаці</h1></p>',
+            '<li><ul>Пункт без елемента li</ul></li>'
+          ],
+          explanation: 'Внутрішній тег <em> має закриватися раніше за зовнішній <strong>.'
+        }
+      ];
+
+      let activeQuizItems = [];
+      const userQuizSelections = {};
+
+      /**
+       * Перемішує варіанти відповідей для 8 запитань так, щоб:
+       * 1) жодна правильна відповідь не стояла першою (індекс 0);
+       * 2) правильні відповіді були рівномірно розподілені між 1-ю, 2-ю, 3-ю та 4-ю позиціями (по 2 на кожну позицію).
+       */
+      function buildBalancedShuffledQuiz() {
+        // Цільові позиції для 8 запитань: по два рази індекси 0, 1, 2, 3
+        const targetPositions = [0, 1, 2, 3, 0, 1, 2, 3];
+        // Перемішуємо сам масив позицій, щоб порядок позицій теж змінювався при рестарті
+        for (let i = targetPositions.length - 1; i > 0; i -= 1) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const tmp = targetPositions[i];
+          targetPositions[i] = targetPositions[j];
+          targetPositions[j] = tmp;
+        }
+
+        // Гарантуємо, що серед перших 4 запитань або загалом ніколи не вийде так, що всі перші варіанти правильні:
+        // Фактично targetPositions містить рівно два 0, два 1, два 2, два 3, і ми додатково переконуємося,
+        // що перший елемент у масиві запитань не має correctIndex === 0.
+        if (targetPositions[0] === 0) {
+          const swapIdx = targetPositions.findIndex((pos) => pos !== 0);
+          if (swapIdx > 0) {
+            const t = targetPositions[0];
+            targetPositions[0] = targetPositions[swapIdx];
+            targetPositions[swapIdx] = t;
+          }
+        }
+
+        return rawQuizQuestions.map((item, qIdx) => {
+          const desiredCorrectPos = targetPositions[qIdx];
+          const shuffledDistractors = item.distractors.slice();
+          for (let i = shuffledDistractors.length - 1; i > 0; i -= 1) {
+            const j = Math.floor(Math.random() * (i + 1));
+            const tmp = shuffledDistractors[i];
+            shuffledDistractors[i] = shuffledDistractors[j];
+            shuffledDistractors[j] = tmp;
+          }
+
+          const options = [];
+          let dPtr = 0;
+          for (let pos = 0; pos < 4; pos += 1) {
+            if (pos === desiredCorrectPos) {
+              options.push(item.correctText);
+            } else {
+              options.push(shuffledDistractors[dPtr]);
+              dPtr += 1;
+            }
+          }
+
+          return {
+            q: item.q,
+            options,
+            correctIndex: desiredCorrectPos,
+            explanation: item.explanation
+          };
+        });
+      }
+
+      const quizItemsContainer = document.getElementById('quiz-items-container');
+      const quizAnsweredBadge = document.getElementById('quiz-answered-badge');
+      const quizScoreBadge = document.getElementById('quiz-score-badge');
+      const quizProgressFill = document.getElementById('quiz-progress-fill');
+      const quizSummaryPanel = document.getElementById('quiz-summary-panel');
+
+      function renderQuiz() {
+        let answered = 0;
+        let score = 0;
+
+        activeQuizItems.forEach((item, idx) => {
+          if (userQuizSelections[idx] !== undefined) {
+            answered += 1;
+            if (userQuizSelections[idx] === item.correctIndex) score += 1;
+          }
+        });
+
+        quizAnsweredBadge.textContent = `Відповідей: ${answered} / ${activeQuizItems.length}`;
+        quizScoreBadge.textContent = `Бали: ${score} / ${activeQuizItems.length}`;
+        quizProgressFill.style.width = `${Math.round((answered / activeQuizItems.length) * 100)}%`;
+
+        if (answered === activeQuizItems.length) {
+          quizSummaryPanel.classList.remove('hidden');
+          let text = 'Початковий рівень — варто ще раз переглянути теорію та схему тегів.';
+          let bg = 'var(--warn-bg)';
+          let color = 'var(--warn-text)';
+          let border = 'var(--warn-border)';
+          if (score >= 7) {
+            text = 'Високий рівень! Ви впевнено орієнтуєтесь у понятті мови розмічання гіпертексту та тегах HTML.';
+            bg = 'var(--ok-bg)';
+            color = 'var(--ok-text)';
+            border = 'var(--ok-border)';
+          } else if (score >= 5) {
+            text = 'Достатній рівень! Перегляньте пояснення до запитань, у яких виникли помилки.';
+            bg = 'var(--accent-bg)';
+            color = 'var(--text-primary)';
+            border = 'var(--border-strong)';
+          }
+          quizSummaryPanel.style.backgroundColor = bg;
+          quizSummaryPanel.style.color = color;
+          quizSummaryPanel.style.borderColor = border;
+          quizSummaryPanel.innerHTML = `<strong>Підсумок тесту: ${score} із ${activeQuizItems.length} балів.</strong> ${escapeHtml(text)}`;
+        } else {
+          quizSummaryPanel.classList.add('hidden');
+        }
+
+        const positionLabels = ['1-й варіант', '2-й варіант', '3-й варіант', '4-й варіант'];
+
+        quizItemsContainer.innerHTML = activeQuizItems
+          .map((item, qIdx) => {
+            const chosen = userQuizSelections[qIdx];
+            const isAnswered = chosen !== undefined;
+            const isRight = isAnswered && chosen === item.correctIndex;
+
+            return `
+              <div class="muted-box p-4 sm:p-5 space-y-3">
+                <h3 class="text-base sm:text-lg font-bold">${escapeHtml(item.q)}</h3>
+                <div class="space-y-2">
+                  ${item.options
+                    .map((opt, oIdx) => {
+                      let styleAttr = '';
+                      if (isAnswered) {
+                        if (oIdx === item.correctIndex) {
+                          styleAttr = 'background-color: var(--ok-bg); color: var(--ok-text); border-color: var(--ok-border); font-weight: 700;';
+                        } else if (oIdx === chosen) {
+                          styleAttr = 'background-color: var(--err-bg); color: var(--err-text); border-color: var(--err-border); font-weight: 700;';
+                        }
+                      }
+                      return `
+                        <button
+                          type="button"
+                          data-qq-idx="${qIdx}"
+                          data-oo-idx="${oIdx}"
+                          style="${styleAttr}"
+                          class="quiz-opt-btn btn-alt w-full text-left px-4 py-2.5 text-sm sm:text-base flex items-center justify-between gap-3"
+                        >
+                          <span>${escapeHtml(opt)}</span>
+                          <span class="text-xs font-semibold opacity-75 shrink-0">${positionLabels[oIdx]}</span>
+                        </button>
+                      `;
+                    })
+                    .join('')}
+                </div>
+                ${
+                  isAnswered
+                    ? `<div class="p-3 rounded-xl border-2 text-sm sm:text-base" style="${
+                        isRight
+                          ? 'background-color: var(--ok-bg); color: var(--ok-text); border-color: var(--ok-border);'
+                          : 'background-color: var(--warn-bg); color: var(--warn-text); border-color: var(--warn-border);'
+                      }">
+                        <strong>${isRight ? 'Вірно!' : 'Пояснення:'}</strong> ${escapeHtml(item.explanation)}
+                      </div>`
+                    : ''
+                }
+              </div>
+            `;
+          })
+          .join('');
+
+        quizItemsContainer.querySelectorAll('.quiz-opt-btn').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const qIdx = Number(btn.getAttribute('data-qq-idx'));
+            const oIdx = Number(btn.getAttribute('data-oo-idx'));
+            userQuizSelections[qIdx] = oIdx;
+            renderQuiz();
+          });
+        });
+      }
+
+      function initAndShuffleQuiz(notifyUser) {
+        Object.keys(userQuizSelections).forEach((k) => delete userQuizSelections[k]);
+        activeQuizItems = buildBalancedShuffledQuiz();
+        renderQuiz();
+        if (notifyUser) {
+          showStatus('Варіанти відповідей у тесті перемішано заново.', 'ok');
+        }
+      }
+
+      document.getElementById('quiz-restart-btn').addEventListener('click', () => initAndShuffleQuiz(true));
+      initAndShuffleQuiz(false);
+    })();
+  </script>
+</body>
+</html>
